@@ -28,19 +28,19 @@
             </div>
             <nav class="nav-menu">
                 <button class="nav-btn active" data-target="tab-home">
-                    <i>⚡</i> Neural Overview
+                    <i>⚡</i> Executive Summary
                 </button>
                 <button class="nav-btn" data-target="tab-lstm">
-                    <i>⏳</i> Trajectory Risks (LSTM)
+                    <i>⏳</i> Time-Series Churn (LSTM)
                 </button>
                 <button class="nav-btn" data-target="tab-causal">
-                    <i>🎯</i> Causal Nudge Engine
+                    <i>🎯</i> Retention Simulator (Causal)
                 </button>
                 <button class="nav-btn" data-target="tab-basket">
-                    <i>🛒</i> Market Agents
+                    <i>🛒</i> Smart Product Recommender
                 </button>
                 <button class="nav-btn" data-target="tab-metrics">
-                    <i>📡</i> Telemetry & RF
+                    <i>📡</i> Baseline Model Diagnostics
                 </button>
             </nav>
         </aside>
@@ -54,16 +54,20 @@
 
             <!-- 1. Home / Neural Overview -->
             <section id="tab-home" class="tab-content active glass-panel">
-                <h2 class="cyber-heading">Telemetry Overview</h2>
-                <p class="subtitle">Real-time aggregate scanning of customer life signs.</p>
+                <h2 class="cyber-heading">Executive Summary</h2>
+                <p class="subtitle">Overview of at-risk revenue and high-priority customers.</p>
                 
+                <div class="alert-box" style="background: rgba(30,64,175,0.2); border-left-color: var(--cyan); color: var(--text-main);">
+                    <strong style="color:var(--cyan)">💡 Student Note - Executive Summary:</strong> This dashboard is not just identifying who will leave, it calculates exactly how much Revenue is at risk ("Capital At Risk"). By clicking "Isolate," our Generative AI Agent will instantly build a custom intervention e-mail based on their historical behavior.
+                </div>
+
                 <div class="metrics-grid">
                     <div class="metric-card">
-                        <h3>Monitored Entities</h3>
+                        <h3>Monitored Customers</h3>
                         <p class="metric-value text-cyan" id="val-total-customers">--</p>
                     </div>
                     <div class="metric-card">
-                        <h3>Critical Failure Rate</h3>
+                        <h3>Overall Churn Rate</h3>
                         <p class="metric-value text-amber" id="val-leaving-rate">--</p>
                     </div>
                     <div class="metric-card alert-state">
@@ -106,11 +110,11 @@
 
             <!-- 2. LSTM Trajectory Risks -->
             <section id="tab-lstm" class="tab-content glass-panel">
-                <h2 class="cyber-heading">Temporal Trajectory (LSTM)</h2>
-                <p class="subtitle">Neural network sequence mapping identifies pre-churn behavioral degradation paths.</p>
+                <h2 class="cyber-heading">Time-Series Churn Forecasting (LSTM)</h2>
+                <p class="subtitle">Deep Learning sequence mapping identifies behavior drops before a customer leaves.</p>
 
-                <div class="alert-box">
-                    <strong>SYSTEM LOG:</strong> "Time-Series Long Short-Term Memory (LSTM) sequence mapping deployed. Switching from static RFM to longitudinal sequence vectors..."
+                <div class="alert-box" style="background: rgba(30,64,175,0.2); border-left-color: var(--cyan); color: var(--text-main);">
+                    <strong style="color:var(--cyan)">💡 Student Note - What makes this novel?</strong> Standard models (like Random Forest) only look at aggregate totals (e.g., "$500 spent"). This Long Short-Term Memory (LSTM) Neural Network maps a customer's spending <i>trajectory</i> over 6 months! It can see if someone spent $500 all at once 6 months ago (high risk of churn) vs consistent spending.
                 </div>
 
                 <div class="chart-container">
@@ -120,26 +124,30 @@
 
             <!-- 3. Causal Nudge Engine -->
             <section id="tab-causal" class="tab-content glass-panel">
-                <h2 class="cyber-heading">Causal Intervention Engine</h2>
-                <p class="subtitle">S-Learner Uplift model predicting counterfactual outcomes for specific interventions.</p>
+                <h2 class="cyber-heading">Retention Offer Simulator (Causal AI)</h2>
+                <p class="subtitle">Estimates the true causal uplift of sending a discount (S-Learner model).</p>
                 
+                <div class="alert-box" style="background: rgba(30,64,175,0.2); border-left-color: var(--cyan); color: var(--text-main);">
+                    <strong style="color:var(--cyan)">💡 Student Note - What makes this novel?</strong> Giving an offer to a customer who was already going to buy just burns money! This S-Learner Causal AI calculates the Conditional Average Treatment Effect (CATE). Adjust the slider to see how different discounts change Net Profit by identifying only "Persuadable" customers.
+                </div>
+
                 <div class="simulator-controls">
-                    <label>Initiate Discount Parameter: <span id="out-disc" class="text-cyan">15</span>%</label>
+                    <label>Simulate Discount Campaign: <span id="out-disc" class="text-cyan">15</span>%</label>
                     <input type="range" id="sim-discount" min="5" max="50" value="15" class="cyber-slider">
                 </div>
 
                 <div class="metrics-grid" style="margin-top: 2rem;">
                     <div class="metric-card">
-                        <h3>Persuadable Entities</h3>
+                        <h3>Persuadable Customers</h3>
                         <p class="metric-value text-cyan" id="roi-saved">--</p>
                     </div>
                     <div class="metric-card">
-                        <h3>Salvaged Gross</h3>
+                        <h3>Revenue Salvaged</h3>
                         <p class="metric-value text-emerald" id="roi-gross">--</p>
                         <p class="metric-sub">Mean Uplift: <span id="val-uplift">--</span></p>
                     </div>
                     <div class="metric-card highlight">
-                        <h3>Projected Net Outcome</h3>
+                        <h3>Projected Net Profit</h3>
                         <p class="metric-value text-emerald" id="roi-net">--</p>
                         <p class="metric-sub text-red" id="roi-cost">--</p>
                     </div>
@@ -148,17 +156,21 @@
 
             <!-- 4. Market Agents -->
             <section id="tab-basket" class="tab-content glass-panel">
-                <h2 class="cyber-heading">Market Basket Agents</h2>
-                <p class="subtitle">FP-Growth association rules calculating highest-probability cross-sell pairings.</p>
+                <h2 class="cyber-heading">Smart Product Recommender</h2>
+                <p class="subtitle">Association rules calculating the highest-probability cross-sell pairings.</p>
                 
-                <label class="cyber-label">Select Node Trigger:</label>
+                <div class="alert-box" style="background: rgba(30,64,175,0.2); border-left-color: var(--cyan); color: var(--text-main);">
+                    <strong style="color:var(--cyan)">💡 Student Note - What makes this novel?</strong> We used the highly efficient FP-Growth algorithm instead of standard Apriori! This allows it to scale to massive datasets. Our Generative Agent automatically picks the top item from this list and inserts it into the custom retention email!
+                </div>
+
+                <label class="cyber-label">Select Target Product:</label>
                 <select id="basket-select" class="cyber-select">
                     <!-- Hydrated via JS -->
                 </select>
 
                 <div id="basket-result" style="display: none; margin-top: 2rem;">
                     <div class="suggestion-core">
-                        <h3>🎯 Primary Recommendation Output: <span id="basket-best-match" class="text-cyan">--</span></h3>
+                        <h3>🎯 Primary Cross-Sell Recommendation: <span id="basket-best-match" class="text-cyan">--</span></h3>
                         <p>Confidence Limit: <span id="basket-conf">--</span>% | Lift Factor: <span id="basket-lift">--</span>x</p>
                     </div>
 
@@ -177,9 +189,13 @@
 
             <!-- 5. Default Metrics -->
             <section id="tab-metrics" class="tab-content glass-panel">
-                <h2 class="cyber-heading">Telemetry & Diagnostics</h2>
-                <p class="subtitle">Standard Random Forest diagnostic logs.</p>
+                <h2 class="cyber-heading">Baseline Model Diagnostics</h2>
+                <p class="subtitle">Standard Random Forest diagnostic logs (ROC & PR Curves).</p>
                 
+                <div class="alert-box" style="background: rgba(30,64,175,0.2); border-left-color: var(--emerald); color: var(--text-main);">
+                    <strong style="color:var(--emerald)">💡 Student Note - What makes this novel?</strong> Real-world store data is heavily imbalanced (most people don't churn). Traditional Accuracy scores can be faked on imbalanced datasets. We validate our model strictly through True Positive vs False Positive Curves (ROC-AUC) and Precision-Recall Curves (PR-AUC) to prove it actually works!
+                </div>
+
                 <div class="layout-grid-1-1">
                     <div class="chart-container">
                         <canvas id="rocChart"></canvas>
