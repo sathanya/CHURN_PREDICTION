@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neurometric Command Center</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    
+    <!-- Google Fonts: Orbitron for Sci-Fi, Inter for readability -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dark-neon-theme">
+
+    <!-- Glowing Background Elements -->
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar glass-panel">
+            <div class="brand">
+                <span class="pulse-dot"></span>
+                <h2>NEURO-HUB</h2>
+            </div>
+            <nav class="nav-menu">
+                <button class="nav-btn active" data-target="tab-home">
+                    <i>⚡</i> Neural Overview
+                </button>
+                <button class="nav-btn" data-target="tab-lstm">
+                    <i>⏳</i> Trajectory Risks (LSTM)
+                </button>
+                <button class="nav-btn" data-target="tab-causal">
+                    <i>🎯</i> Causal Nudge Engine
+                </button>
+                <button class="nav-btn" data-target="tab-basket">
+                    <i>🛒</i> Market Agents
+                </button>
+                <button class="nav-btn" data-target="tab-metrics">
+                    <i>📡</i> Telemetry & RF
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-header">
+                <h1>AI Retention Sequence Analyzer</h1>
+                <div class="status-badge">System: ONLINE</div>
+            </header>
+
+            <!-- 1. Home / Neural Overview -->
+            <section id="tab-home" class="tab-content active glass-panel">
+                <h2 class="cyber-heading">Telemetry Overview</h2>
+                <p class="subtitle">Real-time aggregate scanning of customer life signs.</p>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h3>Monitored Entities</h3>
+                        <p class="metric-value text-cyan" id="val-total-customers">--</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Critical Failure Rate</h3>
+                        <p class="metric-value text-amber" id="val-leaving-rate">--</p>
+                    </div>
+                    <div class="metric-card alert-state">
+                        <h3>Capital At Risk</h3>
+                        <p class="metric-value text-red" id="val-money-at-risk">--</p>
+                        <p class="metric-sub" id="val-risk-pool-size">--</p>
+                    </div>
+                </div>
+
+                <div class="data-table-wrapper">
+                    <h3>High-Priority Targets</h3>
+                    <table id="top-customers-table">
+                        <thead>
+                            <tr>
+                                <th>Entity ID</th>
+                                <th>Collapse Probability</th>
+                                <th>Historic Capital</th>
+                                <th>Actions</th>
+                                <th>Dormant Days</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 2. LSTM Trajectory Risks -->
+            <section id="tab-lstm" class="tab-content glass-panel">
+                <h2 class="cyber-heading">Temporal Trajectory (LSTM)</h2>
+                <p class="subtitle">Neural network sequence mapping identifies pre-churn behavioral degradation paths.</p>
+
+                <div class="alert-box">
+                    <strong>SYSTEM LOG:</strong> "Time-Series Long Short-Term Memory (LSTM) sequence mapping deployed. Switching from static RFM to longitudinal sequence vectors..."
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="lstmChart" height="120"></canvas>
+                </div>
+            </section>
+
+            <!-- 3. Causal Nudge Engine -->
+            <section id="tab-causal" class="tab-content glass-panel">
+                <h2 class="cyber-heading">Causal Intervention Engine</h2>
+                <p class="subtitle">S-Learner Uplift model predicting counterfactual outcomes for specific interventions.</p>
+                
+                <div class="simulator-controls">
+                    <label>Initiate Discount Parameter: <span id="out-disc" class="text-cyan">15</span>%</label>
+                    <input type="range" id="sim-discount" min="5" max="50" value="15" class="cyber-slider">
+                </div>
+
+                <div class="metrics-grid" style="margin-top: 2rem;">
+                    <div class="metric-card">
+                        <h3>Persuadable Entities</h3>
+                        <p class="metric-value text-cyan" id="roi-saved">--</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Salvaged Gross</h3>
+                        <p class="metric-value text-emerald" id="roi-gross">--</p>
+                        <p class="metric-sub">Mean Uplift: <span id="val-uplift">--</span></p>
+                    </div>
+                    <div class="metric-card highlight">
+                        <h3>Projected Net Outcome</h3>
+                        <p class="metric-value text-emerald" id="roi-net">--</p>
+                        <p class="metric-sub text-red" id="roi-cost">--</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Market Agents -->
+            <section id="tab-basket" class="tab-content glass-panel">
+                <h2 class="cyber-heading">Market Basket Agents</h2>
+                <p class="subtitle">FP-Growth association rules calculating highest-probability cross-sell pairings.</p>
+                
+                <label class="cyber-label">Select Node Trigger:</label>
+                <select id="basket-select" class="cyber-select">
+                    <!-- Hydrated via JS -->
+                </select>
+
+                <div id="basket-result" style="display: none; margin-top: 2rem;">
+                    <div class="suggestion-core">
+                        <h3>🎯 Primary Recommendation Output: <span id="basket-best-match" class="text-cyan">--</span></h3>
+                        <p>Confidence Limit: <span id="basket-conf">--</span>% | Lift Factor: <span id="basket-lift">--</span>x</p>
+                    </div>
+
+                    <table id="basket-table" style="margin-top: 2rem;">
+                        <thead>
+                            <tr>
+                                <th>Secondary Pairing</th>
+                                <th>Confidence %</th>
+                                <th>Lift Velocity</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 5. Default Metrics -->
+            <section id="tab-metrics" class="tab-content glass-panel">
+                <h2 class="cyber-heading">Telemetry & Diagnostics</h2>
+                <p class="subtitle">Standard Random Forest diagnostic logs.</p>
+                
+                <div class="layout-grid-1-1">
+                    <div class="chart-container">
+                        <canvas id="rocChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="prChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

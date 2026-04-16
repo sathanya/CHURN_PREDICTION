@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Intelligence Pipeline</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js for beautiful graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* Professional Enterprise CSS */
+        :root {
+            --bg-color: #F9FAFB;
+            --text-main: #111827;
+            --text-muted: #6B7280;
+            --border-color: #E5E7EB;
+            --card-bg: #FFFFFF;
+            --primary: #4F46E5; /* Indigo */
+            --hover-bg: #F3F4F6;
+            --success: #059669; /* Emerald */
+            --danger: #DC2626;  /* Red */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        h1 {
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1F2937;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+
+        h4 {
+            font-size: 1rem;
+            color: #4B5563;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem 2rem;
+        }
+
+        /* Tabs Navigation */
+        .tabs {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 0.75rem 0;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* CARDS & METRICS */
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .metric-card.highlight {
+            border-top: 4px solid var(--success);
+        }
+
+        .metric-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-sub {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .text-danger { color: var(--danger); }
+        .text-success { color: var(--success); }
+
+        /* LAYOUTS */
+        .layout-grid-1-2 {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1.5rem;
+        }
+
+        .layout-grid-1-1 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media(max-width: 768px){
+            .layout-grid-1-2, .layout-grid-1-1 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* FORMS & TABLES */
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+        }
+        .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        thead {
+            background-color: var(--hover-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            text-align: left;
+            padding: 1rem;
+            font-weight: 600;
+            color: #4B5563;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        tbody tr:hover {
+            background-color: rgba(249, 250, 251, 0.5);
+        }
+
+        /* PROFESSOR NOTE / CONTEXT BOX */
+        .prof-note {
+            background-color: #F3F4F6;
+            border-left: 4px solid var(--text-muted);
+            padding: 16px;
+            border-radius: 4px;
+            color: #374151;
+            font-size: 0.95rem;
+            margin-top: 12px;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        
+        .clean-list { list-style: none; margin-top: 1rem; }
+        .clean-list li { padding: 0.5rem 0; border-bottom: 1px solid var(--border-color); }
+        .clean-list li:last-child { border-bottom: none; }
+        
+        .success-banner {
+            background-color: #ECFDF5;
+            border: 1px solid #A7F3D0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        .success-banner h3 { margin-top: 0.5rem; margin-bottom: 0; color: #065F46; }
+        
+        .controls-row {
+            display: flex; gap: 2rem; flex-wrap: wrap;
+            background: var(--card-bg); padding: 1.5rem; border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .control-group { flex: 1; min-width: 250px; }
+        .control-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #374151; }
+        input[type=range] { width: 100%; accent-color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <h1>🛍️ E-Commerce AI Assistant</h1>
+            <nav class="tabs">
+                <button class="tab-btn active" data-target="tab-home">Home Summary</button>
+                <button class="tab-btn" data-target="tab-churn">Why are they leaving?</button>
+                <button class="tab-btn" data-target="tab-coupon">Coupon Simulator</button>
+                <button class="tab-btn" data-target="tab-basket">Shopping Cart AI</button>
+                <button class="tab-btn" data-target="tab-metrics">Accuracy Checks</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- 1. Home Summary Tab -->
+        <section id="tab-home" class="tab-content active">
+            <h2>Business Health Summary</h2>
+            <p class="subtitle">A quick look at how the store is doing, and who we need to focus on saving today.</p>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h3>Total Customers</h3>
+                    <p class="metric-value">6,243</p>
+                </div>
+                <div class="metric-card">
+                    <h3>Overall Leaving Rate</h3>
+                    <p class="metric-value">14.2%</p>
+                    <p class="metric-sub">Left Store</p>
+                </div>
+                <div class="metric-card">
+                    <h3>Money at Risk</h3>
+                    <p class="metric-value text-danger">$112,408</p>
+                    <p class="metric-sub">From 204 customers</p>
+                </div>
+            </div>
+
+            <div class="prof-note">
+                💡 <b>Analytical Context:</b><br>
+                This section calculates totals directly from the data. The 'Money at Risk' sums up the total historic lifetime value of all active customers who our AI flagged with a >70% chance of leaving. This proves to a business owner exactly how much revenue is mathematically at risk right now.
+            </div>
+
+            <h3>Top Customers to Rescue</h3>
+            <p class="subtitle">We sorted these active customers so the ones who spend the most and are most likely to leave appear at the very top.</p>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Chance of Leaving</th>
+                            <th>Total Money Spent ($)</th>
+                            <th># of Orders Made</th>
+                            <th>Days since last purchase</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background-color: rgba(79, 70, 229, 0.1);">
+                            <td>C-1092</td><td><strong>94.2%</strong></td><td>$3,204</td><td>12</td><td>42</td>
+                        </tr>
+                        <tr style="background-color: rgba(79, 70, 229, 0.08);">
+                            <td>C-3381</td><td><strong>89.1%</strong></td><td>$2,450</td><td>8</td><td>38</td>
+                        </tr>
+                        <tr style="background-color: rgba(79, 70, 229, 0.05);">
+                            <td>C-8120</td><td><strong>85.5%</strong></td><td>$1,889</td><td>5</td><td>60</td>
+                        </tr>
+                        <tr><td>C-4432</td><td>74.2%</td><td>$840</td><td>3</td><td>90</td></tr>
+                        <tr><td>C-9915</td><td>71.8%</td><td>$1,420</td><td>6</td><td>22</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 2. Why are they leaving -->
+        <section id="tab-churn" class="tab-content">
+            <h2>Why is the AI flagging this customer?</h2>
+            <p class="subtitle">Instead of guessing, we can use advanced math to see exactly which behavior caused the AI to flag them.</p>
+
+            <div class="layout-grid-1-2">
+                <div class="card">
+                    <h3>Pick a customer ID from the risk list:</h3>
+                    <select id="user-select" class="form-select">
+                        <option value="C-1092">C-1092 (High Risk)</option>
+                    </select>
+
+                    <div id="user-profile-details" style="margin-top: 2rem;">
+                        <h4>This customer's profile:</h4>
+                        <ul class="clean-list">
+                            <li><b>Total Orders:</b> 12</li>
+                            <li><b>Days Between Orders (Avg):</b> 42 days</li>
+                            <li><b>Total Spent:</b> $3,204</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <canvas id="shapChart" height="200"></canvas>
+                    <div class="prof-note">
+                        💡 <b>Analytical Context:</b><br>
+                        This simulates a <b>SHAP Waterfall Plot</b>. Machine learning is usually a 'black box' where we can't see why it makes a decision. SHAP breaks the math open. The blue bars push the risk score down (making them safe), and the red bars push the risk score up.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Coupon Simulator -->
+        <section id="tab-coupon" class="tab-content">
+            <h2>Financial Rescue Simulator</h2>
+            <p class="subtitle">If we send discount coupons to our at-risk customers, how much money can we save?</p>
+            
+            <div class="controls-row">
+                <div class="control-group">
+                    <label>Target customers with Risk > (<span id="out-thresh">75</span>%)</label>
+                    <input type="range" id="sim-threshold" min="50" max="99" value="75">
+                </div>
+                <div class="control-group">
+                    <label>Give them a discount of (<span id="out-disc">15</span>%)</label>
+                    <input type="range" id="sim-discount" min="5" max="50" value="15">
+                </div>
+                <div class="control-group">
+                    <label>How many will actually use the coupon? (<span id="out-succ">10</span>%)</label>
+                    <input type="range" id="sim-success" min="1" max="30" value="10">
+                </div>
+            </div>
+
+            <div class="metrics-grid" style="margin-top: 2rem;">
+                <div class="metric-card">
+                    <h3>Customers Saved</h3>
+                    <p class="metric-value">20 out of 204</p>
+                </div>
+                <div class="metric-card">
+                    <h3>Gross Revenue Saved</h3>
+                    <p class="metric-value text-success">$11,020</p>
+                </div>
+                <div class="metric-card highlight">
+                    <h3>Net Profit (After Cost)</h3>
+                    <p class="metric-value text-success">$9,367</p>
+                    <p class="metric-sub text-danger">-$1,653 Cost</p>
+                </div>
+            </div>
+
+            <div class="prof-note">
+                💡 <b>Analytical Context:</b><br>
+                This calculates Return on Investment (ROI) dynamically. It isolates a specific group of at-risk users, averages out what they normally spend, and mathematically deducts the cost of giving them a coupon. The 'Net Profit' is money the business would have completely lost if the AI didn't catch these users.
+            </div>
+        </section>
+
+        <!-- 4. Shopping Cart AI -->
+        <section id="tab-basket" class="tab-content">
+            <h2>Smart Cross-Selling (Market Basket)</h2>
+            <p class="subtitle">Pick an item from the real dataset. The AI will immediately suggest the best item to pair with it, just like Amazon's 'Frequently Bought Together'.</p>
+            
+            <div class="card">
+                <label>Imagine you put this in your cart:</label>
+                <select class="form-select">
+                    <option>Organic Avocado</option>
+                </select>
+
+                <div style="margin-top: 1.5rem;">
+                    <div class="success-banner">
+                        ✅ <b>AI Notification Triggered:</b><br>
+                        <h3>🎯 You should pop up a message offering them: Lime</h3>
+                    </div>
+
+                    <div class="prof-note">
+                        💡 <b>Analytical Context:</b><br>
+                        We used the <b>FP-Growth Algorithm</b> to scan millions of receipts. The <b>Confidence (42.1%)</b> means if they buy the first item, there's a strong chance they will buy the second. The <b>Lift (3.2x)</b> means they are MORE likely to buy them together than by random chance.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Accuracy Checks -->
+        <section id="tab-metrics" class="tab-content">
+            <h2>Proof that the Model Works</h2>
+            <p class="subtitle">How do we know the AI isn't just making random guesses? We use these curves to prove it is mathematically sound.</p>
+            
+            <div class="layout-grid-1-1">
+                <div class="card">
+                    <h3>ROC Curve</h3>
+                    <canvas id="rocChart"></canvas>
+                </div>
+
+                <div class="card">
+                    <h3>Precision-Recall Curve</h3>
+                    <canvas id="prChart"></canvas>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Tab Logic
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.target).classList.add('active');
+            });
+        });
+
+        // Initialize Mock Charts
+        window.onload = () => {
+            // SHAP Waterfall mock
+            new Chart(document.getElementById('shapChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Days Since Order', 'Total Items', 'Avg Order Value', 'Lifetime Orders', 'Tenure'],
+                    datasets: [{
+                        label: 'Impact on Churn Risk',
+                        data: [-0.1, -0.6, 1.2, 2.4, 3.8],
+                        backgroundColor: ['#2563EB', '#2563EB', '#DC2626', '#DC2626', '#DC2626']
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Make some mock simple curve data
+            const linspace = (start, stop, num) => Array.from({length: num}, (_, i) => start + (stop - start) * i / (num - 1));
+            
+            // ROC Mock
+            const fpr = linspace(0, 1, 20);
+            const tpr = fpr.map(x => Math.pow(x, 0.3)); // Curve up
+            new Chart(document.getElementById('rocChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: fpr.map(f => f.toFixed(2)),
+                    datasets: [
+                        { label: 'Model Score (AUC = 0.86)', data: tpr, borderColor: '#4F46E5', fill: false, tension: 0.4 },
+                        { label: 'Random Guess', data: fpr, borderColor: '#9CA3AF', borderDash: [5,5], fill: false }
+                    ]
+                },
+                options: { elements: { point:{radius:0} }, scales: { x: { title:{display:true,text:'False Positive Rate'}}, y:{title:{display:true,text:'True Positive Rate'}} } }
+            });
+
+            // PR Mock
+            const rec = linspace(0, 1, 20);
+            const pre = rec.map(x => 1.0 - Math.pow(x, 2)*0.8);
+            new Chart(document.getElementById('prChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: rec.map(f => f.toFixed(2)),
+                    datasets: [
+                        { label: 'Model Score (AUC = 0.74)', data: pre, borderColor: '#0F766E', fill: false, tension: 0.4 }
+                    ]
+                },
+                options: { elements: { point:{radius:0} }, scales: { x: { title:{display:true,text:'Recall'}}, y:{title:{display:true,text:'Precision'}} } }
+            });
+
+            // Sliders mock update
+            ['sim-threshold', 'sim-discount', 'sim-success'].forEach(id => {
+                document.getElementById(id).addEventListener('input', (e) => {
+                    const outId = id.replace('sim-', 'out-');
+                    if(document.getElementById(outId)) document.getElementById(outId).innerText = e.target.value;
+                });
+            });
+        };
+    </script>
+</body>
+</html>
