@@ -282,10 +282,138 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // INITIALIZE APP
-    initSummary();
+    // --- STRESS TEST SLIDER ---
+    const simStress = document.getElementById('sim-stress');
+    const outStress = document.getElementById('out-stress');
+    
+    const baseChurnRate = { val: null };
+    const baseCapital   = { val: null };
+
+    async function updateStressTest() {
+        const shock = parseInt(simStress.value);
+        const factor = 1.0 - (shock / 100.0);
+        outStress.innerText = shock === 0 ? 'Baseline (0% Drop)' : `-${shock}% Consumer Spending`;
+
+        try {
+            const res = await fetch(`/api/stress_test?factor=${factor}`);
+            const data = await res.json();
+
+            // Animate capital at risk going up
+            const capEl = document.getElementById('val-money-at-risk');
+            const rateEl = document.getElementById('val-leaving-rate');
+            if (shock > 0) {
+                capEl.innerText = moneyFmt.format(data.new_risk_capital);
+                rateEl.innerText = pctFmt.format(data.new_churn_rate);
+                document.getElementById('card-capital-risk').style.boxShadow = '0 0 20px rgba(239,68,68,0.5)';
+                document.getElementById('card-leaving-rate').style.boxShadow = '0 0 20px rgba(239,68,68,0.5)';
+            } else {
+                // Reset to originals
+                if (baseChurnRate.val !== null) {
+                    capEl.innerText = moneyFmt.format(baseCapital.val);
+                    rateEl.innerText = pctFmt.format(baseChurnRate.val);
+                }
+                document.getElementById('card-capital-risk').style.boxShadow = '';
+                document.getElementById('card-leaving-rate').style.boxShadow = '';
+            }
+        } catch(e) { console.error(e); }
+    }
+
+    simStress.addEventListener('input', updateStressTest);
+
+    // --- AFFINITY NETWORK GRAPH (vis-network) ---
+    async function initAffinityNetwork() {
+        try {
+            const res = await fetch('/api/network_graph');
+            const data = await res.json();
+            if (!data.nodes || data.nodes.length === 0) return;
+
+            const container = document.getElementById('affinity-network');
+
+            // Format nodes with neon glow color
+            const nodes = new vis.DataSet(data.nodes.map(n => ({
+                id: n.id,
+                label: n.label.length > 25 ? n.label.substring(0, 22) + '...' : n.label,
+                title: n.label,
+                color: {
+                    background: '#0f172a',
+                    border: '#06b6d4',
+                    highlight: { background: '#0e7490', border: '#06b6d4' }
+                },
+                font: { color: '#e2e8f0', size: 11 },
+                borderWidth: 2,
+                shape: 'dot',
+                size: 14
+            })));
+
+            const edges = new vis.DataSet(data.edges.map(e => ({
+                from: e.from,
+                to: e.to,
+                title: e.title,
+                width: Math.min(e.value, 5),
+                color: { color: '#10b981', highlight: '#34d399' },
+                arrows: { to: { enabled: true, scaleFactor: 0.5 } }
+            })));
+
+            const networkData = { nodes, edges };
+            const options = {
+                physics: {
+                    enabled: true,
+                    barnesHut: { gravitationalConstant: -4000, springLength: 150 }
+                },
+                interaction: { hover: true, tooltipDelay: 100 },
+                layout: { randomSeed: 42 }
+            };
+
+            new vis.Network(container, networkData, options);
+        } catch(e) { console.error(e); }
+    }
+
+    // --- THREAT DETECTION TABLE ---
+    async function initThreatDetection() {
+        try {
+            const res = await fetch('/api/anomalies');
+            const data = await res.json();
+            
+            const tbody = document.querySelector('#anomalies-table tbody');
+            tbody.innerHTML = '';
+
+            if (!data.anomalies || data.anomalies.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="color:var(--text-muted); text-align:center;">No threats detected in current dataset.</td></tr>';
+                return;
+            }
+
+            data.anomalies.forEach(a => {
+                const score = parseFloat(a.Anomaly_Score).toFixed(4);
+                const tr = document.createElement('tr');
+                tr.style.borderLeft = '3px solid var(--red)';
+                tr.innerHTML = `
+                    <td style="color:var(--red); font-weight:600;">⚠ ${a.CustomerID}</td>
+                    <td style="color:var(--amber);">${score}</td>
+                    <td style="font-size:0.8rem;">${a.Flag_Reason}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch(e) { console.error(e); }
+    }
+
+    // --- PATCH initSummary to store baseline values ---
+    const _origInitSummary = initSummary;
+
+    // --- INITIALIZE APP ---
+    initSummary().then(() => {
+        // After summary loads, store the baseline numbers
+        const capEl = document.getElementById('val-money-at-risk');
+        const rateEl = document.getElementById('val-leaving-rate');
+        // We'll just re-fetch to store them cleanly
+        fetch('/api/summary').then(r => r.json()).then(d => {
+            baseChurnRate.val = d.overall_leaving_rate;
+            baseCapital.val   = d.valuable_at_risk;
+        });
+    });
     initLSTM();
     updateCausalSim();
     initBasket();
+    initAffinityNetwork();
+    initThreatDetection();
     initMetrics();
 });

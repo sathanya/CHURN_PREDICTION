@@ -1,0 +1,45 @@
+CustomerID,total_spent,total_lifetime_orders,Anomaly_Score,Flag_Reason
+14646.0,280206.02,73,-0.12695148822815783,Ultra-High AOV (Possible Corporate Bot/Fraud) | Extreme Order Frequency (Account Sharing/Scraping)
+18102.0,259657.3,60,-0.12526690585779954,Ultra-High AOV (Possible Corporate Bot/Fraud) | Extreme Order Frequency (Account Sharing/Scraping)
+17450.0,194550.79,46,-0.11705800991715132,Ultra-High AOV (Possible Corporate Bot/Fraud) | Extreme Order Frequency (Account Sharing/Scraping)
+16446.0,168472.5,2,-0.11633998741228879,Ultra-High AOV (Possible Corporate Bot/Fraud)
+12346.0,77183.6,1,-0.10904361702411647,Ultra-High AOV (Possible Corporate Bot/Fraud) | Sub-24Hr Velocity (Bot Behavior)
+14911.0,143825.06,201,-0.10696042760089919,Extreme Order Frequency (Account Sharing/Scraping)
+12415.0,124914.53,21,-0.1054769995073257,Ultra-High AOV (Possible Corporate Bot/Fraud)
+14156.0,117379.63,55,-0.10258370836597785,Ultra-High AOV (Possible Corporate Bot/Fraud) | Extreme Order Frequency (Account Sharing/Scraping)
+17511.0,91062.38,31,-0.10165308457537314,Ultra-High AOV (Possible Corporate Bot/Fraud) | Extreme Order Frequency (Account Sharing/Scraping)
+16029.0,81024.84,63,-0.09055769212479048,Extreme Order Frequency (Account Sharing/Scraping)
+13694.0,65039.62,50,-0.08921554634073436,Extreme Order Frequency (Account Sharing/Scraping)
+15311.0,60767.9,91,-0.08638039004065756,Extreme Order Frequency (Account Sharing/Scraping)
+16684.0,66653.56,28,-0.08322478364484776,Ultra-High AOV (Possible Corporate Bot/Fraud)
+13089.0,58825.83,97,-0.07988061493130083,Extreme Order Frequency (Account Sharing/Scraping)
+14298.0,51527.3,44,-0.0796159333035763,Extreme Order Frequency (Account Sharing/Scraping)
+17949.0,58510.48,45,-0.07317179814980734,Extreme Order Frequency (Account Sharing/Scraping)
+14096.0,65164.79,17,-0.07153350535193226,Ultra-High AOV (Possible Corporate Bot/Fraud)
+15749.0,44534.3,3,-0.07041909512936972,Ultra-High AOV (Possible Corporate Bot/Fraud)
+15061.0,54534.14,48,-0.07002392631425625,Extreme Order Frequency (Account Sharing/Scraping)
+12748.0,33719.73,209,-0.06945554324754288,Extreme Order Frequency (Account Sharing/Scraping)
+15769.0,56252.72,26,-0.06483625292235284,Ultra-High AOV (Possible Corporate Bot/Fraud)
+17841.0,40991.57,124,-0.06379878577656728,Extreme Order Frequency (Account Sharing/Scraping)
+14088.0,50491.81,13,-0.05355765694899983,Ultra-High AOV (Possible Corporate Bot/Fraud)
+16422.0,34684.4,51,-0.05334314980132737,Extreme Order Frequency (Account Sharing/Scraping)
+13798.0,37153.85,57,-0.05319287806339079,Extreme Order Frequency (Account Sharing/Scraping)
+12931.0,42055.96,15,-0.04837481144615674,Ultra-High AOV (Possible Corporate Bot/Fraud)
+17404.0,31906.82,15,-0.0437943961723003,Ultra-High AOV (Possible Corporate Bot/Fraud)
+16013.0,37130.6,47,-0.042156122206359115,Extreme Order Frequency (Account Sharing/Scraping)
+13408.0,28117.04,62,-0.040495728112694085,Extreme Order Frequency (Account Sharing/Scraping)
+16333.0,26626.8,22,-0.030769460803027227,Complex Multi-Dimensional Outlier
+13098.0,28882.44,28,-0.025787097173327833,Complex Multi-Dimensional Outlier
+13081.0,28337.38,11,-0.02369133800606149,Ultra-High AOV (Possible Corporate Bot/Fraud)
+12753.0,21429.39,6,-0.02288928121475975,Ultra-High AOV (Possible Corporate Bot/Fraud)
+15838.0,33643.08,19,-0.022748305469479257,Complex Multi-Dimensional Outlier
+17389.0,31833.68,34,-0.021255986051343045,Extreme Order Frequency (Account Sharing/Scraping)
+15098.0,39916.5,3,-0.020930387264209704,Ultra-High AOV (Possible Corporate Bot/Fraud) | Sub-24Hr Velocity (Bot Behavior)
+13777.0,25977.16,33,-0.019296297436751875,Extreme Order Frequency (Account Sharing/Scraping)
+17857.0,26879.04,23,-0.0186101268443698,Complex Multi-Dimensional Outlier
+14680.0,28754.11,16,-0.015512601843132856,Complex Multi-Dimensional Outlier
+17381.0,20275.61,29,-0.014175507107983432,Complex Multi-Dimensional Outlier
+12901.0,17654.54,28,-0.006925436374753402,Complex Multi-Dimensional Outlier
+15039.0,19914.44,47,-0.006810376029848575,Extreme Order Frequency (Account Sharing/Scraping)
+12435.0,7829.89,2,-0.0034318314539735217,Ultra-High AOV (Possible Corporate Bot/Fraud)
+18251.0,4314.72,1,-0.0007426374293209026,Ultra-High AOV (Possible Corporate Bot/Fraud) | Sub-24Hr Velocity (Bot Behavior)

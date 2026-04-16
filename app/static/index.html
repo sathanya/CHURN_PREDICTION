@@ -11,6 +11,9 @@
     
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Vis Network (For Affinity Web) -->
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 </head>
 <body class="dark-neon-theme">
 
@@ -39,6 +42,9 @@
                 <button class="nav-btn" data-target="tab-basket">
                     <i>🛒</i> Smart Product Recommender
                 </button>
+                <button class="nav-btn" data-target="tab-threats">
+                    <i>🛑</i> Threat Detection
+                </button>
                 <button class="nav-btn" data-target="tab-metrics">
                     <i>📡</i> Baseline Model Diagnostics
                 </button>
@@ -66,15 +72,21 @@
                         <h3>Monitored Customers</h3>
                         <p class="metric-value text-cyan" id="val-total-customers">--</p>
                     </div>
-                    <div class="metric-card">
+                    <div class="metric-card" id="card-leaving-rate">
                         <h3>Overall Churn Rate</h3>
                         <p class="metric-value text-amber" id="val-leaving-rate">--</p>
                     </div>
-                    <div class="metric-card alert-state">
+                    <div class="metric-card alert-state" id="card-capital-risk">
                         <h3>Capital At Risk</h3>
                         <p class="metric-value text-red" id="val-money-at-risk">--</p>
                         <p class="metric-sub" id="val-risk-pool-size">--</p>
                     </div>
+                </div>
+                
+                <div class="simulator-controls" style="margin-top:20px; background:rgba(0,0,0,0.4); border-left:4px solid var(--amber);">
+                    <label>🌪️ Macro-Economic Shock Simulator: <span id="out-stress" class="text-amber">Baseline (0% Drop)</span></label>
+                    <input type="range" id="sim-stress" min="0" max="50" value="0" class="cyber-slider" style="accent-color: var(--amber);">
+                    <p class="subtitle" style="margin-top:8px;">Simulating a reduction in consumer spending velocity. Watch how models recalculate projected churn instantly.</p>
                 </div>
 
                 <div class="layout-grid-1-1 target-grid">
@@ -163,6 +175,9 @@
                     <strong style="color:var(--cyan)">💡 Student Note - What makes this novel?</strong> We used the highly efficient FP-Growth algorithm instead of standard Apriori! This allows it to scale to massive datasets. Our Generative Agent automatically picks the top item from this list and inserts it into the custom retention email!
                 </div>
 
+                <!-- NEW: NETWORK GRAPH UI -->
+                <div id="affinity-network" style="width: 100%; height: 350px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 2rem;"></div>
+
                 <label class="cyber-label">Select Target Product:</label>
                 <select id="basket-select" class="cyber-select">
                     <!-- Hydrated via JS -->
@@ -183,6 +198,31 @@
                             </tr>
                         </thead>
                         <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <!-- NEW TAB 6: THREAT DETECTION -->
+            <section id="tab-threats" class="tab-content glass-panel">
+                <h2 class="cyber-heading">Threat Detection (Anomalies)</h2>
+                <p class="subtitle">Isolation Forest pipeline tracking extreme behavioral outliers.</p>
+                
+                <div class="alert-box" style="background: rgba(239, 68, 68, 0.2); border-left-color: var(--red); color: var(--text-main);">
+                    <strong style="color:var(--red)">💡 Student Note - What makes this novel?</strong> Security is vital in E-Commerce. While the Random Forest predicts normal churn, we built a separate unsupervised <b>Isolation Forest</b> algorithm to hunt for bots, card-testers, or account-sharing based on impossible purchasing speeds or order frequencies.
+                </div>
+
+                <div class="data-table-wrapper">
+                    <table id="anomalies-table">
+                        <thead>
+                            <tr>
+                                <th style="color:var(--red)">Flagged Entity ID</th>
+                                <th>Anomaly Score</th>
+                                <th>Threat Profile / Reason</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Injected via JS -->
+                        </tbody>
                     </table>
                 </div>
             </section>

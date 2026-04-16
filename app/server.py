@@ -25,6 +25,11 @@ try:
     metrics_df = pd.read_csv(os.path.join(data_dir, "model_metrics.csv"))
     full_features_df = pd.read_csv(os.path.join(data_dir, "features.csv"))
     
+    try:
+        anomalies_df = pd.read_csv(os.path.join(data_dir, "anomalies.csv"))
+    except:
+        anomalies_df = pd.DataFrame()
+    
     model = joblib.load(os.path.join(data_dir, "churn_model.pkl"))
     explainer = shap.TreeExplainer(model)
 except Exception as e:
@@ -219,6 +224,13 @@ def generate_nudge(customer_id: str):
             risk_level = risk_match['Churn_Probability'].values[0] * 100
         avg_order = user['average_order_value'].values[0]
 
+    # Price Elasticity Segment
+    elasticity_score = "Medium"
+    if avg_order > 150:
+        elasticity_score = "Low (Premium Target)"
+    elif avg_order < 60:
+        elasticity_score = "High (Budget Target)"
+
     # 2. Determine an optimal discount via a fast proxy rule mimicking Causal Limit
     optimal_discount = min(35, max(5, int((risk_level / 100.0) * 20.0)))
 
@@ -236,6 +248,7 @@ def generate_nudge(customer_id: str):
         f"> [SCAN] Trajectory analysis complete. Collapse Risk: {risk_level:.1f}%.",
         f"> [CAUSAL_SIM] Calculating optimal Margin-Retention bounds...",
         f"> [CAUSAL_SIM] Maximum effective intervention cap identified at {optimal_discount}% discount.",
+        f"> [ELASTICITY_AI] Price Sensitivity mapped as: {elasticity_score}.",
         f"> [CART_AGENT] Accessing historic affinities... Primary Affinity: '{favorite_item}'.",
         f"> [CART_AGENT] FP-Growth recommends pairing with: '{cross_sell}'.",
         "> [COMPILER] Synthesizing tailored intervention parameter...",
@@ -248,6 +261,61 @@ def generate_nudge(customer_id: str):
         "trace": lines,
         "email": generated_email
     }
+
+@app.get("/api/anomalies")
+def get_anomalies():
+    if 'anomalies_df' not in globals() or anomalies_df.empty:
+        return {"anomalies": []}
+    return {"anomalies": anomalies_df.to_dict(orient="records")}
+
+@app.get("/api/stress_test")
+def stress_test(factor: float = 1.0):
+    if active_users.empty or model is None:
+        return {"new_churn_rate": 0, "new_risk_capital": 0}
+    
+    stressed_df = active_users.copy()
+    stressed_df['total_spent'] = stressed_df['total_spent'] * factor
+    stressed_df['average_order_value'] = stressed_df['average_order_value'] * factor
+    stressed_df['average_days_between_orders'] = stressed_df['average_days_between_orders'] / factor
+    
+    features = ['total_lifetime_orders', 'total_spent', 'total_items_bought', 'average_order_value', 'average_days_between_orders']
+    new_probs = model.predict_proba(stressed_df[features])[:, 1]
+    
+    stressed_df['New_Churn_Prob'] = new_probs
+    new_at_risk = stressed_df[stressed_df['New_Churn_Prob'] >= 0.70]
+    
+    total_users = len(churn_df)
+    churned_already = churn_df['Churn'].sum()
+    new_churned = len(new_at_risk)
+    
+    return {
+        "new_churn_rate": float(churned_already + new_churned) / total_users,
+        "new_risk_capital": float(new_at_risk['total_spent'].sum())
+    }
+
+@app.get("/api/network_graph")
+def get_network_graph():
+    if basket_df.empty:
+        return {"nodes": [], "edges": []}
+    
+    top_rules = basket_df.head(40)
+    nodes_set = set()
+    edges = []
+    
+    for _, row in top_rules.iterrows():
+        ant = str(row['antecedents'])
+        con = str(row['consequents'])
+        nodes_set.add(ant)
+        nodes_set.add(con)
+        edges.append({
+            "from": ant,
+            "to": con,
+            "value": float(row['lift']),
+            "title": f"Lift: {row['lift']:.2f}"
+        })
+        
+    nodes = [{"id": n, "label": n} for n in nodes_set]
+    return {"nodes": nodes, "edges": edges}
 
 if __name__ == "__main__":
     import uvicorn
