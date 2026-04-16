@@ -49,7 +49,7 @@ at_risk_pool = active_users[active_users['Churn_Probability'] >= 0.70] if not ac
 # --- Default Route ---
 @app.get("/", response_class=HTMLResponse)
 async def read_root():
-    with open(os.path.join(static_dir, "index.html"), "r") as f:
+    with open(os.path.join(static_dir, "index.html"), "r", encoding="utf-8") as f:
         return f.read()
 
 # --- API Routes ---
@@ -114,7 +114,7 @@ def get_lstm_risk():
 
 @app.get("/api/causal_nudge")
 def get_causal_nudge(discount: float = 15.0):
-    if causal_model is None or not 'full_features_df' in locals() or full_features_df.empty:
+    if causal_model is None or 'full_features_df' not in globals() or full_features_df.empty:
         return {"rescued": 0, "pool_size": 0, "revenue_saved": 0, "cost": 0, "net_profit": 0, "uplift_mean": 0}
         
     df_nudge = full_features_df.copy()
