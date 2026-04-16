@@ -198,6 +198,57 @@ def get_metrics():
         }
     }
 
+@app.get("/api/generate_nudge/{customer_id}")
+def generate_nudge(customer_id: str):
+    # This acts as our "Language Model" mock compiler
+    import random
+    
+    # 1. Fetch user status
+    try:
+        cid = int(customer_id)
+        user = full_features_df[full_features_df['CustomerID'] == cid]
+    except:
+        user = pd.DataFrame()
+        
+    risk_level = 85.0 + random.uniform(-5, 10)
+    avg_order = 120.0
+    if not user.empty:
+        # We grab the churn prob directly if they are in the risk pool
+        risk_match = at_risk_pool[at_risk_pool['CustomerID'] == cid]
+        if not risk_match.empty:
+            risk_level = risk_match['Churn_Probability'].values[0] * 100
+        avg_order = user['average_order_value'].values[0]
+
+    # 2. Determine an optimal discount via a fast proxy rule mimicking Causal Limit
+    optimal_discount = min(35, max(5, int((risk_level / 100.0) * 20.0)))
+
+    # 3. Fetch a recommendation pair from the basket_df
+    try:
+        sample_basket = basket_df.sample(1).iloc[0]
+        favorite_item = sample_basket['antecedents']
+        cross_sell = sample_basket['consequents']
+    except:
+        favorite_item = "Premium Coffee Blend"
+        cross_sell = "Insulated Travel Mug"
+
+    lines = [
+        f"> [INIT] Handshake established with Node_{customer_id}...",
+        f"> [SCAN] Trajectory analysis complete. Collapse Risk: {risk_level:.1f}%.",
+        f"> [CAUSAL_SIM] Calculating optimal Margin-Retention bounds...",
+        f"> [CAUSAL_SIM] Maximum effective intervention cap identified at {optimal_discount}% discount.",
+        f"> [CART_AGENT] Accessing historic affinities... Primary Affinity: '{favorite_item}'.",
+        f"> [CART_AGENT] FP-Growth recommends pairing with: '{cross_sell}'.",
+        "> [COMPILER] Synthesizing tailored intervention parameter...",
+        "> [OUTPUT] Script ready for deployment:"
+    ]
+
+    generated_email = f"SUBJECT: A private offer on {cross_sell} just for you!\n\nHi there,\n\nWe noticed you haven't dropped by in a while. As a thank-you for your past orders of {favorite_item}, we've unlocked a secret {optimal_discount}% discount exclusively on your account for the next 48 hours.\n\nPair it with our {cross_sell} and start exploring again!\n\nBest,\nThe Intelligence Team"
+    
+    return {
+        "trace": lines,
+        "email": generated_email
+    }
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

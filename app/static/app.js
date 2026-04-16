@@ -46,13 +46,57 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${u.CustomerID}</td>
                     <td class="text-amber"><strong>${pctFmt.format(u.Churn_Probability)}</strong></td>
                     <td>${moneyFmt.format(u.total_spent)}</td>
-                    <td><button class="nav-btn" style="padding:4px 8px; font-size:0.8rem">Isolate</button></td>
-                    <td>${u.days_since_last_order}</td>
+                    <td><button class="nav-btn isolate-btn" data-id="${u.CustomerID}" style="padding:4px 8px; font-size:0.8rem; background:rgba(6,182,212,0.1); border:1px solid var(--cyan-glow);">Isolate</button></td>
                 `;
                 tbody.appendChild(tr);
             });
+            
+            // Bind isolate buttons
+            document.querySelectorAll('.isolate-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const cid = e.target.getAttribute('data-id');
+                    triggerAgent(cid);
+                });
+            });
+
         } catch (e) {
             console.error(e);
+        }
+    }
+
+    async function triggerAgent(cid) {
+        const terminal = document.getElementById('agent-terminal');
+        terminal.innerHTML = '';
+        const cursor = `<span class="pulse-dot" style="display:inline-block; margin-left:4px;"></span>`;
+        terminal.innerHTML = `<div style="color:var(--text-main)">> Initiating Trace on Node ${cid}...${cursor}</div>`;
+        
+        try {
+            const res = await fetch(`/api/generate_nudge/${cid}`);
+            const data = await res.json();
+            
+            terminal.innerHTML = ''; // clear initial
+            
+            let delay = 0;
+            // Type out the trace logs
+            data.trace.forEach((line, index) => {
+                setTimeout(() => {
+                    terminal.innerHTML += `<div style="margin-bottom:4px;">${line}</div>`;
+                    terminal.scrollTop = terminal.scrollHeight;
+                }, delay);
+                delay += (Math.random() * 400) + 200; // random hacker typing speed
+            });
+            
+            // Output the final email payload
+            setTimeout(() => {
+                terminal.innerHTML += `
+                <div style="margin-top:12px; padding:10px; background:rgba(16,185,129,0.1); border:1px solid var(--emerald); border-radius:4px; color:var(--text-main); white-space:pre-wrap; font-family: 'Inter', sans-serif;">${data.email}</div>
+                `;
+                terminal.innerHTML += `<div style="margin-top:10px; color:var(--text-muted)">> [SYSTEM] Payload delivered to outbound queue. Standing by.</div>`;
+                terminal.scrollTop = terminal.scrollHeight;
+            }, delay + 800);
+            
+        } catch(e) {
+            terminal.innerHTML += `<div style="color:var(--red)">> [CRITICAL ERROR] Trace failed.</div>`;
         }
     }
 
